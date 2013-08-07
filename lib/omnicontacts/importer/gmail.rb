@@ -77,7 +77,10 @@ module OmniContacts
               contact[:relation] = entry['gContact$relation'].first['rel']
             end
           end
-
+          
+          contact[:phoneNumber] = entry['gd$phoneNumber'][0]['$t'] if entry['gd$phoneNumber']
+          contact[:postalAddress] = entry['gd$postalAddress'][0]['$t'] if entry['gd$postalAddress']
+          
           contacts << contact if contact[:name]
         end
         contacts.uniq! {|c| c[:email] || c[:image_source] || c[:name]}
