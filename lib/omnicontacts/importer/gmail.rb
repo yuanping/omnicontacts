@@ -78,8 +78,35 @@ module OmniContacts
             end
           end
           
-          contact[:phoneNumber] = entry['gd$phoneNumber'][0]['$t'] if entry['gd$phoneNumber']
-          contact[:postalAddress] = entry['gd$postalAddress'][0]['$t'] if entry['gd$postalAddress']
+          if entry['gd$organization']
+            contact[:company] = entry['gd$organization']['gd$orgName']['$t'] if entry['gd$organization']['gd$orgName']
+            contact[:title] = entry['gd$organization']['gd$orgTitle']['$t'] if entry['gd$organization']['gd$orgTitle']
+          end
+          
+          if entry['gd$email']
+            contact[:emails] = []
+            entry['gd$email'].each do |email|
+              contact[:emails] << {value: email['address'], key: email['label']}
+            end
+          end
+          if entry['gd$phoneNumber']
+            contact[:phones] = []
+            entry['gd$phoneNumber'].each do |phone|
+              contact[:phones] << {value: phone['$t'], key: phone['label']}
+            end
+          end
+          if entry['gd$postalAddress']
+            contact[:addresses] = []
+            entry['gd$postalAddress'].each do |address|
+              contact[:addresses] << {value: address['$t'], key: address['label']}
+            end
+          end
+          if entry['gd$ims']
+            contact[:ims] = []
+            entry['gd$ims'].each do |im|
+              contact[:ims] << {value: im['address'], key: im['label']}
+            end
+          end
           
           contacts << contact if contact[:name]
         end
