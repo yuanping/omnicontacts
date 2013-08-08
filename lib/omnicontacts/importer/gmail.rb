@@ -78,7 +78,7 @@ module OmniContacts
             end
           end
           
-          if entry['gd$organization'].try([], 0)
+          if entry['gd$organization'].try(:[], 0)
             contact[:company] = normalize_name(entry['gd$organization'][0]['gd$orgName']['$t']) if entry['gd$organization'][0]['gd$orgName']
             contact[:title] = normalize_name(entry['gd$organization'][0]['gd$orgTitle']['$t']) if entry['gd$organization'][0]['gd$orgTitle']
           end
