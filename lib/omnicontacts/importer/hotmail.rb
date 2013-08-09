@@ -52,6 +52,9 @@ module OmniContacts
           contact[:birthday] = birthday_format(entry['birth_month'], entry['birth_day'], entry['birth_year'])
           contact[:gender] = entry['gender']
           contact[:profile_picture] = 'https://apis.live.net/v5.0/' + entry['user_id'] + '/picture' if entry['user_id']
+          
+          contact[:response] = response
+          
           contacts << contact if contact[:name] || contact[:first_name]
         end
         contacts
