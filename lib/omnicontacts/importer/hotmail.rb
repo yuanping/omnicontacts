@@ -13,7 +13,7 @@ module OmniContacts
         super *args
         @auth_host = "oauth.live.com"
         @authorize_path = "/authorize"
-        @scope = "wl.signin, wl.basic, wl.birthday , wl.emails ,wl.contacts_birthday , wl.contacts_photos"
+        @scope = "wl.signin, wl.basic, wl.birthday , wl.emails ,wl.contacts_birthday , wl.contacts_photos, wl.phone_numbers"
         @auth_token_path = "/token"
         @contacts_host = "apis.live.net"
         @contacts_path = "/v5.0/me/contacts"
