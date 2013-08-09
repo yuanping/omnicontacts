@@ -59,31 +59,40 @@ module OmniContacts
           contact = {:id => nil, :first_name => nil, :last_name => nil, :name => nil, :email => nil, :gender => nil, :birthday => nil, :profile_picture=> nil, :relation => nil}
           yahoo_id = nil
           contact[:id] = entry['id'].to_s
+          
+          contact[:emails] = []
+          contact[:phones] = []
+          contact[:web_sites] = []
+          
           entry['fields'].each do |field|
-            if field['type'] == 'name'
+            case field['type']
+            when 'name'
               contact[:first_name] = normalize_name(field['value']['givenName'])
               contact[:last_name] = normalize_name(field['value']['familyName'])
               contact[:name] = full_name(contact[:first_name],contact[:last_name])
-            end
-            contact[:email] = field['value'] if field['type'] == 'email'
-
-            if field['type'] == 'yahooid'
+            when 'email'
+              contact[:email] = field['value'] 
+              contact[:emails] << {value: field['value'], key: field['flags']}
+            when 'yahooid'
               yahoo_id = field['value']
-            end
-
-            contact[:first_name], contact[:last_name], contact[:name] = email_to_name(contact[:email]) if contact[:name].nil? && contact[:email]
-            # contact[:first_name], contact[:last_name], contact[:name] = email_to_name(yahoo_id) if (yahoo_id && contact[:name].nil? && contact[:email].nil?)
-
-            if field['type'] == 'birthday'
+            when 'birthday'
               contact[:birthday] = birthday_format(field['value']['month'], field['value']['day'],field['value']['year'])
+            when 'phone'
+              contact[:phones] << {value: field['value'], key: field['flags']}
+            when 'link'
+              contact[:web_site] << {value: field['value'], key: field['flags']}
+            when 'address'
+              contact[:addresses] << {value: "#{field['value']['stateOrProvince']} #{field['value']['city']} #{field['value']['street']} ", key: field['flags']} if field['value']
             end
-
-            if yahoo_id
-              contact[:image_source] = yahoo_image_url(yahoo_id)
-            else
-              contact[:image_source] = image_url(contact[:email])
-            end
+            
           end
+          contact[:first_name], contact[:last_name], contact[:name] = email_to_name(contact[:email]) if contact[:name].nil? && contact[:email]
+          if yahoo_id
+            contact[:image_source] = yahoo_image_url(yahoo_id)
+          else
+            contact[:image_source] = image_url(contact[:email])
+          end
+          
           contacts << contact if contact[:name]
         end
         contacts.uniq! {|c| c[:email] || c[:image_source] || c[:name]}
