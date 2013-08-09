@@ -81,7 +81,7 @@ module OmniContacts
             when 'phone'
               contact[:phones] << {value: field['value'], key: field['flags']}
             when 'link'
-              contact[:web_site] << {value: field['value'], key: field['flags']}
+              contact[:web_sites] << {value: field['value'], key: field['flags']}
             when 'address'
               contact[:addresses] << {value: "#{field['value']['stateOrProvince']} #{field['value']['city']} #{field['value']['street']} ", key: field['flags']} if field['value']
             end
