@@ -63,6 +63,7 @@ module OmniContacts
           contact[:emails] = []
           contact[:phones] = []
           contact[:web_sites] = []
+          contact[:addresses] = []
           
           entry['fields'].each do |field|
             case field['type']
